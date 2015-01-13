@@ -26,8 +26,8 @@ int  main()
 	int fdw, fdr, i, selectionMenu = 0;
 	char buf[MAX_BUF];
 	char* textInitCon = "Hi";
-	char* myfifow = "ctopyfifo";
-	char* myfifor = "pytocfifo";
+	char* myfifow = "/tmp/ctopyfifo";
+	char* myfifor = "/tmp/pytocfifo";
 
 	const char* choix[5][2];
 
