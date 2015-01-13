@@ -21,11 +21,15 @@
 
 int  main()
 {
-	system("clear");
+	int ret;
+
+	ret = system("clear");
+	fprintf(stdout,"system ret:[%d]\n",ret>>8);
 
 	int fdw, fdr, i, selectionMenu = 0;
 	char buf[MAX_BUF];
 	char* textInitCon = "Hi";
+	char* textPipeWriteError = "There was an error writing to pipe\n";
 	char* myfifow = "/tmp/ctopyfifo";
 	char* myfifor = "/tmp/pytocfifo";
 
@@ -49,15 +53,24 @@ int  main()
 	/* Send Hi to pipe */
 	printf("Writing init string TO pipe: >> %s << ...\n", textInitCon);
 	fdw = open(myfifow, O_WRONLY);
-	write(fdw, textInitCon, sizeof(textInitCon));
-	close(fdw);
+
+	if (fdw < 0) {
+		return -1;
+	}
+
+    if (write(fdw, textInitCon, sizeof(textInitCon)) != sizeof(textInitCon)) {
+        write(2, textPipeWriteError, sizeof(textPipeWriteError));
+        close(fdw);
+        return -1;
+    }
+
+    close(fdw);
 
 	/* Wait Ok from pipe */
 	fdr = open(myfifor, O_RDONLY);
 	read(fdr, buf, MAX_BUF);
 	printf("Received init string FROM pipe: >> %s << ...\n", buf);
 	close(fdr);
-
 
 	if (strcmp(buf, "Ok") == 0) {
 		printf("Init ok, start pushing ...\n\n");
@@ -94,7 +107,6 @@ int  main()
 			printf("Received string FROM pipe: >> %s << ...\n", buf);
 			close(fdr);
 
-
 		}
 
 		printf("\nstop pushing ... program terminated!\n\n");
@@ -102,7 +114,6 @@ int  main()
 	} else {
 		printf("Init failed, abort!\n");
 	}
-
 
 	/* Remove fifos */
 	unlink(myfifow);
