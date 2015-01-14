@@ -24,7 +24,7 @@ int  main()
 	int ret;
 
 	ret = system("clear");
-	fprintf(stdout,"system ret:[%d]\n",ret>>8);
+	printf("[%d] Initial system clear\n", ret);
 
 	int fdw, fdr, i, selectionMenu = 0;
 	char buf[MAX_BUF];
@@ -59,7 +59,7 @@ int  main()
 	}
 
     if (write(fdw, textInitCon, sizeof(textInitCon)) != sizeof(textInitCon)) {
-        write(2, textPipeWriteError, sizeof(textPipeWriteError));
+    	printf("%s",textPipeWriteError);
         close(fdw);
         return -1;
     }
@@ -68,8 +68,8 @@ int  main()
 
 	/* Wait Ok from pipe */
 	fdr = open(myfifor, O_RDONLY);
-	read(fdr, buf, MAX_BUF);
-	printf("Received init string FROM pipe: >> %s << ...\n", buf);
+	ret = read(fdr, buf, MAX_BUF);
+	printf("[%d] Received init string FROM pipe: >> %s << ...\n", ret, buf);
 	close(fdr);
 
 	if (strcmp(buf, "Ok") == 0) {
@@ -88,23 +88,27 @@ int  main()
 
 		while (selectionMenu != 8) {
 			printf("Type index, 8 to quit: ");
-			scanf("%d", &selectionMenu);
+			ret = scanf("%d", &selectionMenu);
 
 			if (selectionMenu != 8) {
-				printf("Writing: >> %s << to pipe...\n", choix[selectionMenu][0]);
+				printf("[%d] Writing: >> %s << to pipe...\n", ret, choix[selectionMenu][0]);
 				fdw = open(myfifow, O_WRONLY);
-				write(fdw, choix[selectionMenu][0], strlen(choix[selectionMenu][0]));
+			    if (write(fdw, choix[selectionMenu][0], strlen(choix[selectionMenu][0])) != strlen(choix[selectionMenu][0])) {
+			    	printf("%s",textPipeWriteError);
+			    }
 				close(fdw);
 			} else {
 				printf("Writing: >> %s << to pipe...\n", "8");
 				fdw = open(myfifow, O_WRONLY);
-				write(fdw, "8", strlen("8"));
+			    if (write(fdw, "8", strlen("8")) != strlen("8")) {
+			    	printf("%s",textPipeWriteError);
+			    }
 				close(fdw);
 			}
 
 			fdr = open(myfifor, O_RDONLY);
-			read(fdr, buf, MAX_BUF);
-			printf("Received string FROM pipe: >> %s << ...\n", buf);
+			ret = read(fdr, buf, MAX_BUF);
+			printf("[%d] Received string FROM pipe: >> %s << ...\n", ret, buf);
 			close(fdr);
 
 		}
