@@ -9,8 +9,6 @@
  ============================================================================
 */
 
-/* Test Commit from Heaven */
-
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -100,9 +98,9 @@ int  main()
 			    }
 				close(fdw);
 			} else {
-				printf("Writing: >> %s << to pipe...\n", "8");
+				printf("Writing: >> %s << to pipe...\n", "Bye");
 				fdw = open(myfifow, O_WRONLY);
-			    if (write(fdw, "8", strlen("8")) != strlen("8")) {
+			    if (write(fdw, "Bye", strlen("Bye")) != strlen("Bye")) {
 			    	printf("%s",textPipeWriteError);
 			    }
 				close(fdw);
