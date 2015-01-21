@@ -36,15 +36,15 @@ int  main()
 	const char* choix[5][2];
 
 	choix[0][0] = "A1f2G7";
-	choix[0][1] = "Serge Junsenbergerr";
+	choix[0][1] = "Olivier Durand";
 	choix[1][0] = "weq814";
-	choix[1][1] = "Police du Lac";
+	choix[1][1] = "Maurice Müller";
 	choix[2][0] = "5zjtR2";
-	choix[2][1] = "Bob the Eponges";
+	choix[2][1] = "Guillaume Cuérel";
 	choix[3][0] = "Hbid13";
 	choix[3][1] = "John Doe";
 	choix[4][0] = "zuR5c4";
-	choix[4][1] = "Toupille Attaque";
+	choix[4][1] = "Julien Haueter";
 
 	/* Create fifos */
 	mkfifo(myfifow,0666);
